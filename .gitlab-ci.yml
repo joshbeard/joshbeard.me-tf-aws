@@ -1,0 +1,60 @@
+---
+stages:
+  - bootstrap:plan
+  - bootstrap:apply
+  - plan
+  - apply
+
+image:
+  name: hashicorp/terraform
+  entrypoint: ['']
+
+tf:bootstrap:plan:
+  stage: bootstrap:plan
+  when: manual
+  script:
+    - terraform init -input=false tf
+    - terraform plan -input=false -out bootstrap-${CI_COMMIT_REF_NAME}.tfstate
+      -target aws_route53_zone.joshbeard_me tf/
+  artifacts:
+    paths:
+      - .terraform/
+      - bootstrap-${CI_COMMIT_REF_NAME}.tfstate
+  only:
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true" && $BOOTSTRAP == "true"
+
+tf:bootstrap:apply:
+  stage: bootstrap:apply
+  when: manual
+  dependencies:
+    - tf:bootstrap:plan
+  script:
+    - terraform apply -target aws_route53_zone.joshbeard_me
+      bootstrap-${CI_COMMIT_REF_NAME}.tfstate
+  only:
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true" && $BOOTSTRAP == "true"
+
+tf:init_plan:
+  stage: plan
+  script:
+    - terraform init -input=false tf
+    - terraform plan -input=false -out ${CI_COMMIT_REF_NAME}.tfplan tf
+  artifacts:
+    paths:
+      - .terraform/
+      - ${CI_COMMIT_REF_NAME}.tfplan
+  only:
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true"
+
+tf:apply:
+  stage: apply
+  dependencies:
+    - tf:init_plan
+  script:
+    - terraform apply -input=false --auto-approve ${CI_COMMIT_REF_NAME}.tfplan
+  only:
+    variables:
+      - $CI_COMMIT_REF_PROTECTED == "true"
