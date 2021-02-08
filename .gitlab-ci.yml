@@ -53,6 +53,7 @@ tf:init_plan:
 
 tf:apply:
   stage: apply
+  when: manual
   dependencies:
     - tf:init_plan
   script:
