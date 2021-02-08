@@ -1,6 +1,10 @@
 # ------------------------------------------------------------------------------
 # joshbeard.me - S3 website bucket
 # ------------------------------------------------------------------------------
+data "aws_sqs_queue" "s3-logs" {
+  name = "s3-logs"
+}
+
 resource "aws_s3_bucket" "joshbeard_site" {
   bucket = var.bucket_name
   acl    = "public-read"
@@ -33,6 +37,17 @@ resource "aws_s3_bucket" "joshbeard_logs" {
   bucket        = "joshbeard-logs"
   acl           = "log-delivery-write"
   force_destroy = true
+}
+
+resource "aws_s3_bucket_notification" "logs" {
+  bucket = aws_s3_bucket.joshbeard_logs.id
+
+  queue {
+    queue_arn     = data.aws_sqs_queue.s3-logs.arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "joshbeard/"
+    filter_suffix = ".gz"
+  }
 }
 
 data "aws_iam_policy_document" "joshbeard_policies" {

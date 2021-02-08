@@ -19,6 +19,7 @@ tf:bootstrap:plan:
   artifacts:
     paths:
       - .terraform/
+      - .terraform.lock.hcl
       - bootstrap-${CI_COMMIT_REF_NAME}.tfstate
   only:
     variables:
@@ -44,6 +45,7 @@ tf:init_plan:
   artifacts:
     paths:
       - .terraform/
+      - .terraform.lock.hcl
       - ${CI_COMMIT_REF_NAME}.tfplan
   only:
     variables:
