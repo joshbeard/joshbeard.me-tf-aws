@@ -1,9 +1,16 @@
 # joshbeard.me
 
-Terraform code for deploying the [joshbeard.me](https://joshbeard.me/) AWS
-services.
+This is a Terraform codebase for deploying AWS resources for the
+[joshbeard.me](https://joshbeard.me) website.
 
-This depends on my [tf-remote-state](https://gitlab.com/joshbeard/tf-remote-state).
+* Uses the [tf-aws-site](https://github.com/joshbeard/tf-aws-site) module for
+  deploying the common resources for this website (S3, CloudFront, ACM, IAM, Route53)
+* Uses the [tf-migadu-route53](https://github.com/joshbeard/tf-migadu-route53)
+  module for managing DNS records for mail in Route53.
+* Uses my [tf-remote-state](https://gitlab.com/joshbeard/tf-remote-state).
+
+The [`Makefile`](Makefile) is included for local use for running Terraform in Docker.
+
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
