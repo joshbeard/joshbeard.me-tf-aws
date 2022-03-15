@@ -7,7 +7,7 @@ This is a Terraform codebase for deploying AWS resources for the
   deploying the common resources for this website (S3, CloudFront, ACM, IAM, Route53)
 * Uses the [tf-migadu-route53](https://github.com/joshbeard/tf-migadu-route53)
   module for managing DNS records for mail in Route53.
-* Uses my [tf-remote-state](https://gitlab.com/joshbeard/tf-remote-state).
+* Uses my [websites-tf-remote-backend](https://github.com/joshbeard/websites-tf-remote-backend) for Terraform state.
 
 The [`Makefile`](Makefile) is included for local use for running Terraform in Docker.
 
