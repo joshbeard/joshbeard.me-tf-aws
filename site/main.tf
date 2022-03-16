@@ -20,3 +20,12 @@ module "joshbeard_me_migadu" {
     "keybase-site-verification=DCBFW1VwtOcrdnGbDKrcsthPHZtSCth1mWx0oUE-SS4"
   ]
 }
+
+resource "aws_route53_record" "github-verify-jbeard-dev" {
+  zone_id = module.joshbeard_me_aws.route53_zone_id
+  name    = "_github-challenge-jbeard-dev"
+  type    = "TXT"
+  ttl     = 300
+  records = ["cca53abbe7"]
+}
+
